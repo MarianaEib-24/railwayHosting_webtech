@@ -59,7 +59,7 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-app.get('/registration', (req, res) => {
+app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, 'registration.html'));
 });
 
