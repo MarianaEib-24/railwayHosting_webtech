@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif
+}
+
+#header {
+    color: rgb(249, 242, 242);
+    text-align: center;
+    text-shadow: 2px 2px 4px #000000;
+    margin-top: 5%;
+    font-size: 50px;
+}
+
+
+
+.login-container {
+    background-color: rgb(132, 27, 44);
+    text-align: center;
+    width: 400px;
+    padding: 50px;
+    border-radius: 20px;
+    gap: 20px;
+    box-shadow: 0 4px 15px rgb(0, 0, 0, 0.9);
+    margin-top: 5%;
+    margin-bottom: 20%;
+    margin-left: 38.5%;
+    height: 65vh;
+    padding-top: 60px;
+}
+
+
+.login-container input {
+    padding: 10px;
+    border-radius: 7px;
+    width: 100%;
+    margin: 10px 0;
+    border: 1px solid black;
+    height: 54px;
+    font-size: 15px;
+
+}
+
+.login-container button {
+    width: 150px;
+    border-radius: 7px;
+    height: 6vh;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+    margin-top: 80px;
+    background-color: rgb(55, 176, 176);
+    font-weight: bold;
+    font-size: 16px;
+
+
+
+}
+
+.login-container h1 {
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 4px #000000;
+    margin-bottom: 20px;
+
+}
+
+.login-container p {
+    margin-top: 100px;
+    text-align: center;
+    color: aliceblue;
+}
+
+.login-container a {
+    color: #0becc6;
+    text-decoration: solid;
+    cursor: pointer;
+
+}
+
+#fpass {
+    color: white;
+    font-weight: bold;
+    text-decoration: solid;
+    margin-top: 30px;
+
+
+}
+
+
+.alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: none;
+    min-width: 250px;
+    text-align: center;
+    animation: fadeIn 0.10s ease-in;
+}
+
+
+.login-body {
+    background: url(inventoryBackground.avif);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        height: 57vh;
+        margin-left: 12%;
+    }
+
+
+    #header {
+        font-size: 38px;
+
+    }
+
+}

@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Inventory Management System</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .user-info h1 {
+            color: #667eea;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .user-role {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .stat-label {
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* Inventory Section */
+        .inventory-section,
+        .quick-actions {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-header h2 {
+            color: #333;
+            font-size: 20px;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Search Bar */
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Inventory Table */
+        .inventory-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f9fa;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            color: #666;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            color: #333;
+            font-size: 14px;
+        }
+
+        .stock-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .stock-high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .stock-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .stock-low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .edit-btn {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .edit-btn:hover,
+        .delete-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .action-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-card:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateX(5px);
+        }
+
+        .action-card h3 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .action-card p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .modal-actions button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th,
+            td {
+                padding: 8px;
+            }
+        }
+
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="user-info">
+                <h1>Welcome, <span id="userName">User</span>!</h1>
+                <p id="userEmail">user@example.com</p>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span class="user-role" id="userRole">Shopkeeper</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Products</h3>
+                <div class="stat-value" id="totalProducts">0</div>
+                <div class="stat-label">In Inventory</div>
+            </div>
+            <div class="stat-card">
+                <h3>Low Stock Items</h3>
+                <div class="stat-value" id="lowStockItems">0</div>
+                <div class="stat-label">Needs Attention</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Value</h3>
+                <div class="stat-value" id="totalValue">GH₵0</div>
+                <div class="stat-label">Inventory Worth</div>
+            </div>
+            <div class="stat-card">
+                <h3>Categories</h3>
+                <div class="stat-value" id="totalCategories">0</div>
+                <div class="stat-label">Product Types</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="inventory-section">
+                <div class="section-header">
+                    <h2>Inventory Management</h2>
+                    <button class="add-btn" id="addProductBtn" onclick="openAddModal()">+ Add Product</button>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search products by name, category, or SKU..."
+                        onkeyup="searchProducts()">
+                </div>
+
+                <div class="inventory-table">
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Stock</th>
+                                <th>Price (GH₵)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <h2 style="margin-bottom: 15px; color: #333;">Quick Actions</h2>
+
+                <div class="action-card" onclick="filterLowStock()">
+                    <h3>⚠️ View Low Stock</h3>
+                    <p>See products that need restocking</p>
+                </div>
+
+                <div class="action-card" onclick="exportInventory()">
+                    <h3>📊 Export Report</h3>
+                    <p>Download inventory data as CSV</p>
+                </div>
+
+                <div class="action-card" onclick="viewAllProducts()">
+                    <h3>📦 View All Products</h3>
+                    <p>Reset filters and see everything</p>
+                </div>
+
+                <div class="action-card" id="userManagementCard" onclick="manageUsers()">
+                    <h3>👥 Manage Users</h3>
+                    <p>View and manage shop assistants</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add New Product</h2>
+            <form id="productForm">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="productName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>SKU</label>
+                    <input type="text" id="productSku" name="sku" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="productCategory" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Beverages">Beverages</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Stock Quantity</label>
+                    <input type="number" id="productStock" name="stock" required min="0">
+                </div>
+                <div class="form-group">
+                    <label>Price (GH₵)</label>
+                    <input type="number" id="productPrice" name="price" required min="0" step="0.01">
+                </div>
+                <input type="hidden" id="reorderLevel" name="reorder_level" value="10">
+
+                <div class="modal-actions">
+                    <button type="submit" class="save-btn">Save Product</button>
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+
+        const API_BASE_URL = 'http://localhost:3000/api/products';
+        const LOW_STOCK_THRESHOLD = 10;
+
+        let currentUser = null;
+        let inventory = [];
+        let editingProductId = null;
+
+
+        window.onload = async function () {
+            currentUser = await getCurrentUser();
+
+
+            if (!currentUser) {
+
+                // Redirecting user if not logged in. 
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Not Logged In',
+                    text: 'Please login to access the dashboard.',
+                }).then(() => {
+                    window.location.href = 'login.html';
+                });
+                return;
+            }
+
+            loadUserInfo();
+            applyRoleRestrictions();
+            fetchDashboardData();
+        };
+
+        async function getCurrentUser() {
+            try {
+                const res = await fetch('http://localhost:3000/current-user');
+                const data = await res.json();
+                return data.success ? data.user : null;
+            } catch (e) {
+                console.error("User fetch error:", e);
+                return null;
+            }
+        }
+
+
+        function loadUserInfo() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userRole').textContent = currentUser.role;
+        }
+
+        function applyRoleRestrictions() {
+            // Implementing the user role rules.
+            if (currentUser.role === 'Assistant') {
+                document.getElementById('addProductBtn').style.display = 'none';
+                document.getElementById('userManagementCard').style.display = 'none';
+            }
+        }
+
+        //Fetching all dashboard data from node.
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch(`http://localhost:3000/api/products/dashboard`);
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    inventory = data.inventory;
+                    renderInventory();
+
+                    // Updating Stats Cards.
+                    document.getElementById('totalProducts').textContent = data.stats.totalProducts;
+                    document.getElementById('lowStockItems').textContent = data.stats.lowStockItems;
+
+                    // Formating total alue to two decimal places
+                    document.getElementById('totalValue').textContent = 'GH₵' + parseFloat(data.stats.totalValue).toFixed(2);
+                    document.getElementById('totalCategories').textContent = data.stats.totalCategories;
+                } else {
+                    throw new Error(data.message || 'Unknown error fetching data.');
+                }
+            } catch (error) {
+                console.error("Dashboard Data Load Error:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data Load Error',
+                    text: 'Could not retrieve inventory from the server. Is the server.js file running?',
+                });
+            }
+        }
+
+        function renderInventory(filteredData = null) {
+            const data = filteredData || inventory;
+            const tbody = document.getElementById('inventoryBody');
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #999;">No products found</td></tr>';
+                return;
+            }
+
+            const canModify = currentUser.role === 'Shopkeeper';
+
+            tbody.innerHTML = data.map(product => {
+                const stockStatus = product.stock > (LOW_STOCK_THRESHOLD * 2) ? 'stock-high' : product.stock > LOW_STOCK_THRESHOLD ? 'stock-medium' : 'stock-low';
+                const stockLabel = product.stock > (LOW_STOCK_THRESHOLD * 2) ? 'In Stock' : product.stock > LOW_STOCK_THRESHOLD ? 'Medium' : 'Low Stock';
+
+                return `
+            <tr>
+              <td>${product.sku}</td>
+              <td>${product.name}</td>
+              <td>${product.category}</td>
+              <td>${product.stock}</td>
+              <td>GH₵${parseFloat(product.price).toFixed(2)}</td>
+              <td><span class="stock-status ${stockStatus}">${stockLabel}</span></td>
+              <td>
+                <div class="action-btns">
+                  <button class="edit-btn ${!canModify ? 'disabled' : ''}" 
+                          onclick="editProduct(${product.id})" 
+                          ${!canModify ? 'disabled' : ''}>Edit</button>
+                  <button class="delete-btn ${!canModify ? 'disabled' : ''}" 
+                          onclick="deleteProductConfirmation(${product.id})" 
+                          ${!canModify ? 'disabled' : ''}>Delete</button>
+                </div>
+              </td>
+            </tr>
+          `;
+            }).join('');
+        }
+
+
+        // Handling form submission.
+        document.getElementById('productForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            //Client-side data collection. 
+            const productData = {
+                name: document.getElementById('productName').value,
+                sku: document.getElementById('productSku').value,
+                category: document.getElementById('productCategory').value,
+                stock: parseInt(document.getElementById('productStock').value),
+                price: parseFloat(document.getElementById('productPrice').value),
+                reorder_level: parseInt(document.getElementById('reorderLevel').value)
+            };
+
+            const method = editingProductId ? 'PUT' : 'POST';
+            const url = editingProductId ? `${API_BASE_URL}/${editingProductId}` : API_BASE_URL;
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: method === 'POST' ? 'Added!' : 'Updated!',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    closeModal();
+                    fetchDashboardData();
+                } else {
+                    // Handling validation errors from Node.js 
+                    let errorText = data.message || 'An unknown error occurred.';
+                    if (data.errors) {
+                        // Displaying validation errors.
+                        errorText += '<br>' + data.errors.map(err => `• ${err.msg || err.message}`).join('<br>');
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Operation Failed',
+                        html: errorText,
+                    });
+                }
+            } catch (error) {
+                console.error('Network Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Network Error',
+                    text: 'Could not connect to the API server.',
+                });
+            }
+        });
+
+        // Confirmation wrapper for delete.
+        function deleteProductConfirmation(id) {
+            if (currentUser.role !== 'Shopkeeper') {
+                Swal.fire({ icon: 'error', title: 'Access Denied', text: 'Only shopkeepers can delete products.' });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteProduct(id);
+                }
+            });
+        }
+
+        // Delete function
+        async function deleteProduct(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.status === 204) {
+                    Swal.fire('Deleted!', 'Product has been deleted.', 'success');
+                    fetchDashboardData();
+                } else {
+                    const data = await response.json();
+                    Swal.fire({ icon: 'error', title: 'Failed!', text: data.message || 'Product deletion failed.' });
+                }
+            } catch (error) {
+                console.error('Network Error:', error);
+                Swal.fire({ icon: 'error', title: 'Network Error', text: 'Could not communicate with server.' });
+            }
+        }
+
+        // ================================
+        // DELETE USER WITH CONFIRMATION
+        // ================================
+        function deleteUser(id) {
+            Swal.fire({
+                title: "Delete User?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete"
+            }).then(async (result) => {
+                if (!result.isConfirmed) return;
+
+                try {
+                    const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+                        method: "DELETE"
+                    });
+
+                    if (res.status === 204) {
+                        // Remove row instantly from Swal popup
+                        const row = document.querySelector(`[data-user-row="${id}"]`);
+                        if (row) row.remove();
+
+                        Swal.fire("Deleted!", "User removed successfully.", "success");
+                    } else {
+                        const data = await res.json();
+                        Swal.fire("Error", data.message || "Failed to delete user", "error");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire("Error", "Network error while deleting user.", "error");
+                }
+            });
+        }
+
+
+        function openAddModal() {
+            if (currentUser.role !== 'Shopkeeper') {
+                Swal.fire({ icon: 'error', title: 'Access Denied', text: 'Only shopkeepers can add products.' });
+                return;
+            }
+
+            editingProductId = null;
+            document.getElementById('modalTitle').textContent = 'Add New Product';
+            document.getElementById('productForm').reset();
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+            editingProductId = null;
+        }
+
+        function editProduct(id) {
+            if (currentUser.role !== 'Shopkeeper') {
+                Swal.fire({ icon: 'error', title: 'Access Denied', text: 'Only shopkeepers can edit products.' });
+                return;
+            }
+
+            const product = inventory.find(p => p.id === id);
+            if (!product) return;
+
+            editingProductId = id;
+            document.getElementById('modalTitle').textContent = 'Edit Product';
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productSku').value = product.sku;
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productPrice').value = product.price;
+
+
+
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = inventory.filter(product =>
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm) ||
+                product.sku.toLowerCase().includes(searchTerm)
+            );
+            renderInventory(filtered);
+        }
+
+        function filterLowStock() {
+            const lowStock = inventory.filter(p => p.stock <= LOW_STOCK_THRESHOLD);
+            renderInventory(lowStock);
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Low Stock Items',
+                text: `Showing ${lowStock.length} products with stock at or below ${LOW_STOCK_THRESHOLD}`,
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        function viewAllProducts() {
+            document.getElementById('searchInput').value = '';
+            fetchDashboardData();
+        }
+
+        function exportInventory() {
+            let csv = 'SKU,Product Name,Category,Stock,Price (GH₵),Status\n';
+
+            inventory.forEach(product => {
+                const status = product.stock > (LOW_STOCK_THRESHOLD * 2) ? 'In Stock' : product.stock > LOW_STOCK_THRESHOLD ? 'Medium' : 'Low Stock';
+                csv += `${product.sku},"${product.name}",${product.category},${product.stock},${parseFloat(product.price).toFixed(2)},${status}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `inventory_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Exported!',
+                text: 'Inventory has been exported successfully.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+
+        async function manageUsers() {
+            if (currentUser.role !== 'Shopkeeper') {
+                Swal.fire({ icon: 'error', title: 'Access Denied', text: 'Only shopkeepers can manage users.' });
+                return;
+            }
+
+            try {
+                const res = await fetch('http://localhost:3000/api/users');
+                const data = await res.json();
+
+                if (data.status !== 'success') throw new Error(data.message || 'Failed to fetch users');
+
+                let html = `<table class="swal2-table">
+                        <tr><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>`;
+                data.users.forEach(user => {
+                    html += `<tr>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>
+                            <select onchange="updateUserRole(${user.id}, this.value)">
+                                <option value="Shopkeeper" ${user.role === 'Shopkeeper' ? 'selected' : ''}>Shopkeeper</option>
+                                <option value="Assistant" ${user.role === 'Assistant' ? 'selected' : ''}>Assistant</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button onclick="deleteUser(${user.id})" class="swal2-confirm swal2-styled">Delete</button>
+                        </td>
+                    </tr>`;
+                });
+                html += `</table>`;
+
+                Swal.fire({
+                    title: 'Manage Users',
+                    html: html,
+                    width: '600px',
+                    showConfirmButton: false,
+                });
+
+            } catch (error) {
+                console.error(error);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Could not fetch users.' });
+            }
+        }
+
+        async function updateUserRole(userId, newRole) {
+            try {
+                const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role: newRole })
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    Swal.fire({ icon: 'success', title: 'Updated!', text: 'Role updated successfully', timer: 1500, showConfirmButton: false });
+
+                    // If the currently logged-in user is the one being updated
+                    if (currentUser.id === userId) {
+                        currentUser.role = newRole;
+                        applyRoleRestrictions(); // re-apply UI restrictions
+                    }
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Error', text: data.message || 'Failed to update role' });
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Network error' });
+            }
+        }
+
+
+        function logout() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out of the system.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#667eea',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, logout'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await fetch('http://localhost:3000/logout');
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+
+        document.getElementById('productModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

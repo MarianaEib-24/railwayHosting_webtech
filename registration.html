@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Inventory Management System</title>
+  <link rel="stylesheet" href="stylish.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    /* Keep your original styling */
+    .register-body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-image: url("shoppingCart.jpg");
+      background-size: cover;
+      font-size: 35px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+    }
+
+    #header {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      font-size: 50px;
+      font-weight: 600;
+      margin-top: 40px;
+    }
+
+    .center-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      max-width: 450px;
+      width: 100%;
+      animation: fadeIn 0.5s ease-in-out;
+      font-size: 35px;
+      margin-left: 15%;
+    }
+
+    .login-container h1 {
+      text-align: center;
+      color: rgb(110, 110, 241);
+      margin-bottom: 25px;
+      font-size: large;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(110, 110, 241, 0.2);
+    }
+
+    .login-container input,
+    .login-container select {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 15px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    .login-container input:focus,
+    .login-container select:focus {
+      outline: none;
+      border-color: rgb(110, 110, 241);
+      box-shadow: 0 0 6px rgba(110, 100, 241, 0.3);
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, rgb(112, 112, 211) 0%, rgb(159, 107, 159) 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+
+    .login-container button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .login-container p {
+      text-align: center;
+      margin-top: 20px;
+      color: rgb(40, 36, 36);
+      font-size: 14px;
+    }
+
+    .login-container a {
+      color: lightskyblue;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .login-container a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width:768px) {
+      #header {
+        font-size: 30px;
+      }
+
+      .login-container {
+        height: auto;
+        margin-left: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body class="register-body">
+  <h1 id="header">Inventory Management System</h1>
+
+  <div class="center-wrapper">
+    <div class="login-container">
+      <h1>Create Your Account</h1>
+
+      <form id="registrationForm">
+        <input type="text" id="name" name="name" placeholder="Full Name" required />
+        <input type="email" id="email" name="email" placeholder="Email (e.g., name@company.com)" required />
+        <input type="password" id="password" name="password" placeholder="Password (min. 8 characters)" required />
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required />
+
+        <select id="role" name="role" required>
+          <option value="" disabled selected>Select Role</option>
+          <option value="Shopkeeper">Shopkeeper</option>
+          <option value="Assistant">Assistant</option>
+        </select>
+
+        <button type="submit" id="registerBtn">Sign Up</button>
+      </form>
+
+      <p>
+        Already have an account?
+        <a href="login.html">Login here</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const role = document.getElementById('role').value;
+
+      // Client-side validation
+      if (name.length < 3) {
+        Swal.fire({ icon: 'error', title: 'Invalid Name', text: 'Name must be at least 3 characters.' });
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        Swal.fire({ icon: 'error', title: 'Invalid Email', text: 'Enter a valid email address.' });
+        return;
+      }
+
+      if (password.length < 8 || password.length > 50) {
+        Swal.fire({ icon: 'error', title: 'Invalid Password', text: 'Password must be 8-50 characters long.' });
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        Swal.fire({ icon: 'error', title: 'Passwords Do Not Match', text: 'Please re-enter your password.' });
+        return;
+      }
+
+      if (!role) {
+        Swal.fire({ icon: 'error', title: 'Select Role', text: 'Please select your role.' });
+        return;
+      }
+
+      // Send registration data to server
+      fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, role })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Registration Successful!',
+              text: 'Redirecting to login...',
+              timer: 2000,
+              showConfirmButton: false
+            }).then(() => {
+              window.location.href = 'login.html';
+            });
+          } else {
+            Swal.fire({ icon: 'error', title: 'Registration Failed', text: data.message });
+          }
+        })
+        .catch(error => {
+          console.error('Server Error:', error);
+          Swal.fire({ icon: 'error', title: 'Server Error', text: 'Please try again later.' });
+        });
+    });
+  </script>
+</body>
+
+</html>

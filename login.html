@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
+  <link rel="stylesheet" href="stylish.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="login-body">
+  <h1 id="header">STAY ON TRACK!</h1>
+
+  <!-- Login Section -->
+  <section id="Login" class="active">
+    <div class="login-container">
+
+      <form id="loginForm">
+        <input type="email" id="email" name="email" placeholder="Email" required />
+        <input type="password" id="password" name="password" placeholder="Password" required />
+        <button type="submit" id="loginBtn">Login</button>
+      </form>
+      <div id=fpass>
+        <a href="forgot-password.html">Forgot Password?</a>
+      </div>
+      <p>
+        Don’t have an account?
+        <a href="registration.html">Register here</a>
+      </p>`
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevent default form submission
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!email || !password) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Missing Fields',
+          text: 'Please enter both your email and password.',
+        });
+        return;
+      }
+
+      // Send credentials to server for verification
+      fetch("http://localhost:3000/login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Login Successful!',
+              text: 'Redirecting to Dashboard...',
+              timer: 1500,
+              showConfirmButton: false
+            }).then(() => {
+              // Redirect to dashboard
+              window.location.href = '/dashboard';
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Login Failed',
+              text: data.message
+            });
+          }
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'Please try again later.'
+          });
+        });
+    });
+  </script>
+
+</body>
+
+</html>
