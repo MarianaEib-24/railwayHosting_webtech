@@ -314,6 +314,12 @@ app.post('/api/forgot-password', async (req, res) => {
 });
 
 
+app.get('/', (req, res) => {
+  //res.sendFile(path.join(__dirname,"registration.html")
+  res.redirect('/registration');
+});
+
+
 // POST /reset-password
 app.post('/reset-password', async (req, res) => {
   const { token, newPassword } = req.body;
@@ -344,7 +350,5 @@ app.post('/reset-password', async (req, res) => {
 // Server Setup
 // --------------------
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
-app.post('/', (req, res) => {
-  res.sendFile(path.join(__dirname,"registration.html")
-  //res.redirect('/registration');
-});
+
+
