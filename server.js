@@ -344,4 +344,6 @@ app.post('/reset-password', async (req, res) => {
 // Server Setup
 // --------------------
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
-
+app.post('/', (req, res) => {
+  res.redirect('/registration');
+});
