@@ -196,7 +196,9 @@
       }
 
       // Send registration data to server
-      fetch('http://localhost:3000/register', {
+      //changed this to make it relative url
+      // fetch('https://localhost:3000/register', {
+      fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password, role })
@@ -224,5 +226,6 @@
     });
   </script>
 </body>
+
 
 </html>
