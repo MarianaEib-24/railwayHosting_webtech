@@ -49,7 +49,8 @@
       }
 
       // Send credentials to server for verification
-      fetch("http://localhost:3000/login", {
+      // fetch("http://localhost:3000/login", {
+      fetch("/login", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -90,5 +91,6 @@
   </script>
 
 </body>
+
 
 </html>
