@@ -27,7 +27,7 @@ app.use(express.static(__dirname));
 // DATABASE CONNECTION
 // --------------------
 const pool = mysql.createPool({
-  host: 'localhost',
+  host: '127.0.0.1',
   user: 'root',
   password: '',
   database: 'inventory_db',
