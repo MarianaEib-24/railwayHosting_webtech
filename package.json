@@ -16,6 +16,9 @@
   "engines": {
   "node": "18.x"
 },
+  "publishConfig": {
+  "registry": "https://npm.pkg.github.com"
+},
 
   "name": "inventory-management",
   "version": "1.0.0",
