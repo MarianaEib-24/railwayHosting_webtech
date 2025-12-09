@@ -555,7 +555,8 @@
 
     <script>
 
-        const API_BASE_URL = 'http://localhost:3000/api/products';
+        // const API_BASE_URL = 'http://localhost:3000/api/products';
+        const API_BASE_URL = '/api/products';
         const LOW_STOCK_THRESHOLD = 10;
 
         let currentUser = null;
@@ -587,7 +588,8 @@
 
         async function getCurrentUser() {
             try {
-                const res = await fetch('http://localhost:3000/current-user');
+                // const res = await fetch('http://localhost:3000/current-user');
+                const res = await fetch('/current-user');
                 const data = await res.json();
                 return data.success ? data.user : null;
             } catch (e) {
@@ -797,7 +799,8 @@
                 if (!result.isConfirmed) return;
 
                 try {
-                    const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+                    // const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+                    const res = await fetch(`/api/users/${id}`, {
                         method: "DELETE"
                     });
 
@@ -917,7 +920,8 @@
             }
 
             try {
-                const res = await fetch('http://localhost:3000/api/users');
+                // const res = await fetch('http://localhost:3000/api/users');
+                const res = await fetch('/api/users');
                 const data = await res.json();
 
                 if (data.status !== 'success') throw new Error(data.message || 'Failed to fetch users');
@@ -956,7 +960,8 @@
 
         async function updateUserRole(userId, newRole) {
             try {
-                const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
+                // const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
+                const res = await fetch(`/api/users/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ role: newRole })
@@ -992,7 +997,8 @@
                 confirmButtonText: 'Yes, logout'
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await fetch('http://localhost:3000/logout');
+                    await fetch('/logout');
+                    // await fetch('http://localhost:3000/logout');
                     window.location.href = 'login.html';
                 }
             });
